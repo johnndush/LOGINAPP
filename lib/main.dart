@@ -1,93 +1,79 @@
+import 'package:example1/home_page.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
+  const MyApp({
+    key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
+    // Scaffold is a layout for
     return MaterialApp(
-      title: 'Drawer and Navigation',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(),
+      debugShowCheckedModeBanner: false,
+      home: RootPage(),
+      theme: ThemeData(primarySwatch: Colors.blue),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  final List<Page> _pages = [
-    Page('Home', Icons.home),
-    Page('Feedback', Icons.feedback),
-    Page('Profile', Icons.person_outline),
-  ];
-
-
-  MyHomePage({Key? key}) : super(key: key);
+// ignore: prefer_typing_uninitialized_variables
+class RootPage extends StatefulWidget {
+  const RootPage({Key? key}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  State<RootPage> createState() => _RootPagestate();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _currentPageIndex = 0;
-
-  void _openPage(int index) {
-    setState(() {
-      _currentPageIndex = index;
-    });
-  }
-
+class _RootPagestate extends State<RootPage> {
+  int currentPage = 0;
   @override
   Widget build(BuildContext context) {
-    List<Widget> drawerItemWidgets = widget._pages
-        .asMap()
-        .map((int index, Page page) =>
-        MapEntry<int, Widget>(index,
-            ListTile(
-              title: Text(page.title),
-              leading: Icon(page.iconData),
-              selected: _currentPageIndex == index,
-              onTap: () {
-                _openPage(index);
-                Navigator.pop(context);
-              },
-            )
-        )
-    ).values.toList();
-    drawerItemWidgets.insert(0, DrawerHeader(
-      child: Text('Drawer Header'),
-      decoration: BoxDecoration(
-        color: Colors.blue,
-      ),
-    ),);
+    var Const;
     return Scaffold(
+      body: const HomePage(),
       appBar: AppBar(
-        title: Text("Bottom Navigation Bar and Drawer Page"),
-      ),
-      body: Center(
-        child: Text(widget._pages[_currentPageIndex].title),
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: drawerItemWidgets,
+        toolbarHeight: 75,
+        title: const Text(
+          'REENA LUSIKE',
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          debugPrint('floating action button');
+        },
+        child: Icon(Icons.add),
+      ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentPageIndex,
-        items: widget._pages.map((Page page) =>
+          currentIndex: currentPage,
+          onTap: (index) => setState(
+                () => currentPage = index,
+              ),
+          iconSize: 30,
+          items: [
             BottomNavigationBarItem(
-              icon: Icon(page.iconData),
-              label: page.title,
-            )).toList(),
-        onTap: _openPage,
-      ),);
+                icon: Icon(Icons.home),
+                label: "home",
+                backgroundColor: Color(0xff36237e)),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.favorite),
+              label: "favourite",
+              backgroundColor: Color(0xff6b4340),
+            ),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.chat),
+                label: "chat",
+                backgroundColor: Color(0xff77a841)),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: "profile",
+              backgroundColor: Colors.green,
+            ),
+          ]),
+    );
   }
-}
-
-class Page {
-  final String title;
-  final IconData iconData;
-  Page(this.title, this.iconData);
 }
